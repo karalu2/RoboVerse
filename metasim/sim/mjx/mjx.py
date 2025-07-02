@@ -12,6 +12,7 @@ from pathlib import Path
 import jax
 import jax.numpy as jnp
 import mujoco
+
 try:
     import mujoco.viewer
 except ImportError:
