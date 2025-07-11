@@ -41,7 +41,7 @@ class Args(ScenarioCfg):
     task: str = "debug:reach_far_away"
     robot: str = "franka"
     num_envs: int = 16
-    sim: Literal["isaaclab", "isaacgym", "mujoco", "genesis", "mjx"] = "isaaclab"
+    sim: Literal["isaaclab", "isaacgym", "mujoco", "genesis", "mjx"] = "mjx"
 
 
 args = tyro.cli(Args)
@@ -233,7 +233,7 @@ def train_ppo():
     """Train PPO for reaching task."""
     ## Choice 1: use scenario config to initialize the environment
     scenario = ScenarioCfg(task=args.task, robots=[args.robot], sim=args.sim, num_envs=args.num_envs)
-    scenario.cameras = []  # XXX: remove cameras to avoid rendering to speed up
+    scenario.cameras = [PinholeCameraCfg(width=1024, height=1024, pos=(1.5, -1.5, 1.5), look_at=(0.0, 0.0, 0.0))]
     metasim_env = MetaSimVecEnv(scenario, task_name=args.task, num_envs=args.num_envs, sim=args.sim)
 
     ## Choice 2: use gym.make to initialize the environment

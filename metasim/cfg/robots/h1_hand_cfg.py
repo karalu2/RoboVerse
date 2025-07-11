@@ -10,6 +10,7 @@ class H1HandCfg(BaseRobotCfg):
     name: str = "h1_hand"
     num_joints: int = 76
     mjcf_path: str = "roboverse_data/robots/h1_hand/mjcf/h1_hand.xml"
+    mjx_mjcf_path: str = "roboverse_data/robots/h1/mjcf/mjx_h1_hand.xml"
     enabled_gravity: bool = True
     fix_base_link: bool = False
     enabled_self_collisions: bool = False
