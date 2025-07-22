@@ -10,7 +10,7 @@ from metasim.constants import PhysicStateType
 from metasim.types import EnvState
 from metasim.utils import configclass, humanoid_reward_util, humanoid_robot_util
 
-from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg, StableReward
+from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg
 
 
 class StandingReward(HumanoidBaseReward):
@@ -19,7 +19,7 @@ class StandingReward(HumanoidBaseReward):
     def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the standing reward."""
         super().__init__(robot_name)
-        #self._stand_height = 0.6  # 需要根据实际机器人调整
+        # self._stand_height = 0.6  # 需要根据实际机器人调整
 
     def __call__(self, states: list[EnvState]) -> float:
         """Compute the standing reward."""
