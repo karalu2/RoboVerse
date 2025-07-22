@@ -16,33 +16,29 @@ from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg, StableReward
 class StandingReward(HumanoidBaseReward):
     """Reward function for maintaining standing posture."""
 
-    def __init__(self, robot_name="h1_simple_hand"):
+    def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the standing reward."""
         super().__init__(robot_name)
-        self._stand_height = 0.6  # 需要根据实际机器人调整
+        #self._stand_height = 0.6  # 需要根据实际机器人调整
 
-    def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
+    def __call__(self, states: list[EnvState]) -> float:
         """Compute the standing reward."""
-        results_still = []
-        for state in states:
-            com_vel = humanoid_robot_util.center_of_mass_velocity(state, self._robot_name)
-            still_x = humanoid_reward_util.tolerance(com_vel[0], bounds=(0.0, 0.0), margin=2)
-            still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
-            still_reward = (still_x + still_y) / 2
-            results_still.append(still_reward)
-
-        stable_rewards = StableReward(robot_name=self._robot_name)(states)
-        return torch.tensor(results_still) * stable_rewards
+        state = states[0]
+        com_vel = humanoid_robot_util.center_of_mass_velocity(state, self._robot_name)
+        still_x = humanoid_reward_util.tolerance(com_vel[0], bounds=(0.0, 0.0), margin=2)
+        still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
+        still_reward = float((still_x + still_y) / 2)
+        return still_reward
 
 
 class OrientationReward(HumanoidBaseReward):
     """Reward function for cube orientation alignment."""
 
-    def __init__(self, robot_name="h1_simple_hand"):
+    def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the orientation reward."""
         super().__init__(robot_name)
 
-    def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
+    def __call__(self, states: list[EnvState]) -> float:
         """Compute the orientation reward."""
         results = []
         for state in states:

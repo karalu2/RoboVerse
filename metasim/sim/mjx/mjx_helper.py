@@ -142,6 +142,9 @@ def process_entity(
     if root_fixed:
         non_root_joint_ids = joint_ids
     else:
+        print(f"Entity name: {name}")
+        print(f"joint_id_map[{name!r}] = {joint_id_map.get(name)}")
+        print("Available joint_id_map keys:", list(joint_id_map.keys()))
         root_jid = int(joint_ids[0])
         root_jtype = int(jnt_type_np[root_jid])
         root_qadr = int(jnt_qposadr_np[root_jid])
