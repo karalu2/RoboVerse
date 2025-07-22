@@ -277,8 +277,14 @@ def main() -> None:
         try_add_table=cfg("add_table", False),
         sim=cfg("sim"),
         num_envs=cfg("num_envs", 1),
-        headless=True if cfg("train_or_eval") == "train" else False,
-        cameras=[],
+        headless= False, # True if cfg("train_or_eval") == "train" else False,
+        cameras=[PinholeCameraCfg(
+                width=cfg("video_width", 1024),
+                height=cfg("video_height", 1024),
+                pos=(4.0, -4.0, 4.0),  # adjust as needed
+                look_at=(0.0, 0.0, 0.0),
+            )
+        ],
     )
 
     # For different simulators, the decimation factor is different, so we need to set it here
