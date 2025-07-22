@@ -37,6 +37,7 @@ def parse_args():
             "h1_2_without_hand",
             "h1",
             "h1_simple_hand",
+            "h1_hand_hb",
             "h1_hand",
             "sawyer_mujoco",
             "fetch",

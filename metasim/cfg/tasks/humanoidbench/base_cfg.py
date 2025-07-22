@@ -90,6 +90,8 @@ class HumanoidBaseReward:
             or robot_name == "h1_simple_hand"
             or robot_name == "h1_hand"
             or robot_name == "h1_body_collision"
+            or robot_name == "h1_simple_hand"
+            or robot_name == "h1_hand_hb"
         ):
             self._stand_height = H1_STAND_HEAD_HEIGHT
             self._stand_neck_height = H1_STAND_NECK_HEIGHT
