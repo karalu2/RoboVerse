@@ -17,6 +17,7 @@ from .google_robot_static_cfg import GoogleRobotStaticCfg
 from .h1_2_without_hand_cfg import H12WithoutHandCfg
 from .h1_cfg import H1Cfg
 from .h1_hand_cfg import H1HandCfg
+from .h1_hand_hb_cfg import H1HandHbCfg
 from .h1_simple_hand_cfg import H1SimpleHandCfg
 from .h1_wrist_cfg import H1WristCfg
 from .iiwa_cfg import IiwaCfg

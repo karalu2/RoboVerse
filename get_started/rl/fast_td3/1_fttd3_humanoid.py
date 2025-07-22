@@ -11,8 +11,8 @@ CONFIG: dict[str, Any] = {
     # Environment
     # -------------------------------------------------------------------------------
     "sim": "mjx",
-    "robots": ["h1"],
-    "task": "humanoidbench:Walk",
+    "robots": ["h1_hand_hb"],
+    "task": "humanoidbench:Cube",
     "decimation": 10,
     "train_or_eval": "train",
     # -------------------------------------------------------------------------------
