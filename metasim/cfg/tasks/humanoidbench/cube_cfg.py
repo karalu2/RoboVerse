@@ -27,8 +27,8 @@ class StandingReward(HumanoidBaseReward):
         com_vel = humanoid_robot_util.center_of_mass_velocity(state, self._robot_name)
         still_x = humanoid_reward_util.tolerance(com_vel[0], bounds=(0.0, 0.0), margin=2)
         still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
-        reward_stand = float((still_x + still_y) / 2)
-        return reward_stand
+        reward_still = float((still_x + still_y) / 2)
+        return reward_still
 
 
 class OrientationReward(HumanoidBaseReward):
@@ -59,7 +59,7 @@ class HandProximityReward(HumanoidBaseReward):
         """Initialize the hand proximity reward."""
         super().__init__(robot_name)
 
-    def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
+    def __call__(self, states: list[EnvState]) -> float:
         """Compute the hand proximity reward."""
         state = states[0]
         left_hand_pos = humanoid_robot_util.left_hand_position(state, self._robot_name)

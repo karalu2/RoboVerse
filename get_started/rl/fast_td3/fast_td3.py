@@ -37,35 +37,35 @@ class SimpleReplayBuffer(nn.Module):
         self.playground_mode = playground_mode and asymmetric_obs
         self.gamma = gamma
         self.n_steps = n_steps
-        self.device = device
+        self.device = torch.device("cpu")
 
-        self.observations = torch.zeros((n_env, buffer_size, n_obs), device=device, dtype=torch.float)
-        self.actions = torch.zeros((n_env, buffer_size, n_act), device=device, dtype=torch.float)
-        self.rewards = torch.zeros((n_env, buffer_size), device=device, dtype=torch.float)
-        self.dones = torch.zeros((n_env, buffer_size), device=device, dtype=torch.long)
-        self.truncations = torch.zeros((n_env, buffer_size), device=device, dtype=torch.long)
-        self.next_observations = torch.zeros((n_env, buffer_size, n_obs), device=device, dtype=torch.float)
+        self.observations = torch.zeros((n_env, buffer_size, n_obs), device=self.device, dtype=torch.float)
+        self.actions = torch.zeros((n_env, buffer_size, n_act), device=self.device, dtype=torch.float)
+        self.rewards = torch.zeros((n_env, buffer_size), device=self.device, dtype=torch.float)
+        self.dones = torch.zeros((n_env, buffer_size), device=self.device, dtype=torch.long)
+        self.truncations = torch.zeros((n_env, buffer_size), device=self.device, dtype=torch.long)
+        self.next_observations = torch.zeros((n_env, buffer_size, n_obs), device=self.device, dtype=torch.float)
         if asymmetric_obs:
             if self.playground_mode:
                 # Only store the privileged part of observations (n_critic_obs - n_obs)
                 self.privileged_obs_size = n_critic_obs - n_obs
                 self.privileged_observations = torch.zeros(
                     (n_env, buffer_size, self.privileged_obs_size),
-                    device=device,
+                    device=self.device,
                     dtype=torch.float,
                 )
                 self.next_privileged_observations = torch.zeros(
                     (n_env, buffer_size, self.privileged_obs_size),
-                    device=device,
+                    device=self.device,
                     dtype=torch.float,
                 )
             else:
                 # Store full critic observations
                 self.critic_observations = torch.zeros(
-                    (n_env, buffer_size, n_critic_obs), device=device, dtype=torch.float
+                    (n_env, buffer_size, n_critic_obs), device=self.device, dtype=torch.float
                 )
                 self.next_critic_observations = torch.zeros(
-                    (n_env, buffer_size, n_critic_obs), device=device, dtype=torch.float
+                    (n_env, buffer_size, n_critic_obs), device=self.device, dtype=torch.float
                 )
         self.ptr = 0
 
