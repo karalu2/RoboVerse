@@ -19,6 +19,7 @@ class StandingReward(HumanoidBaseReward):
     def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the standing reward."""
         super().__init__(robot_name)
+        self._stand_height = 0.6
 
     def __call__(self, states: list[EnvState]) -> torch.floatTensor:
         """Compute the standing reward."""
@@ -110,3 +111,7 @@ class CubeCfg(HumanoidTaskCfg):
     checker = _CubeChecker()
     reward_weights = [0.2, 0.5, 0.3]
     reward_functions = [StandingReward, OrientationReward, HandProximityReward]
+
+    def extra_spec(self):
+        """This task does not require any extra observations."""
+        return {}
