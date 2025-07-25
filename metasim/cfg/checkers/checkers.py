@@ -522,7 +522,7 @@ class _PushChecker(BaseChecker):
 ## FIXME: This checker should be removed!
 @configclass
 class _CubeChecker(BaseChecker):
-    def check(self, handler: BaseSimHandler) -> torch.BoolTensor:
+    def check(self, handler: BaseSimHandler):
         states = handler.get_states()
         terminated = []
 
