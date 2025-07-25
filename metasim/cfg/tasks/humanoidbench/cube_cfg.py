@@ -27,8 +27,8 @@ class StandingReward(HumanoidBaseReward):
         com_vel = humanoid_robot_util.center_of_mass_velocity(state, self._robot_name)
         still_x = humanoid_reward_util.tolerance(com_vel[0], bounds=(0.0, 0.0), margin=2)
         still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
-        still_reward = float((still_x + still_y) / 2)
-        return still_reward
+        reward_stand = float((still_x + still_y) / 2)
+        return reward_stand
 
 
 class OrientationReward(HumanoidBaseReward):
@@ -40,43 +40,41 @@ class OrientationReward(HumanoidBaseReward):
 
     def __call__(self, states: list[EnvState]) -> float:
         """Compute the orientation reward."""
-        results = []
-        for state in states:
-            left_cube_rot = state["metasim_body_cube_1/cube_1"]["rot"]
-            right_cube_rot = state["metasim_body_cube_2/cube_2"]["rot"]
-            target_cube_rot = state["metasim_body_cube_destination/cube_destination"]["rot"]
+        state = states[0]
+        left_cube_rot = state["metasim_body_cube_1/cube_1"]["rot"]
+        right_cube_rot = state["metasim_body_cube_2/cube_2"]["rot"]
+        target_cube_rot = state["metasim_body_cube_destination/cube_destination"]["rot"]
 
-            left_alignment = torch.norm(left_cube_rot - target_cube_rot)
-            right_alignment = torch.norm(right_cube_rot - target_cube_rot)
+        left_alignment = torch.norm(left_cube_rot - target_cube_rot)
+        right_alignment = torch.norm(right_cube_rot - target_cube_rot)
 
-            results.append(left_alignment + right_alignment)
-        return torch.tensor(results)
+        reward_orient = left_alignment + right_alignment
+        return reward_orient
 
 
 class HandProximityReward(HumanoidBaseReward):
     """Reward function for hand-cube proximity."""
 
-    def __init__(self, robot_name="h1_simple_hand"):
+    def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the hand proximity reward."""
         super().__init__(robot_name)
 
     def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
         """Compute the hand proximity reward."""
-        results = []
-        for state in states:
-            left_hand_pos = humanoid_robot_util.left_hand_position(state, self._robot_name)
-            right_hand_pos = humanoid_robot_util.right_hand_position(state, self._robot_name)
-            cube1_pos = state["metasim_body_cube_1/cube_1"]["pos"]
-            cube2_pos = state["metasim_body_cube_2/cube_2"]["pos"]
+        state = states[0]
+        left_hand_pos = humanoid_robot_util.left_hand_position(state, self._robot_name)
+        right_hand_pos = humanoid_robot_util.right_hand_position(state, self._robot_name)
+        cube1_pos = state["metasim_body_cube_1/cube_1"]["pos"]
+        cube2_pos = state["metasim_body_cube_2/cube_2"]["pos"]
 
-            left_dist = torch.norm(left_hand_pos - cube1_pos)
-            right_dist = torch.norm(right_hand_pos - cube2_pos)
+        left_dist = torch.norm(left_hand_pos - cube1_pos)
+        right_dist = torch.norm(right_hand_pos - cube2_pos)
 
-            left_proximity = humanoid_reward_util.tolerance(left_dist, bounds=(0.0, 0.0), margin=0.5)
-            right_proximity = humanoid_reward_util.tolerance(right_dist, bounds=(0.0, 0.0), margin=0.5)
+        left_proximity = humanoid_reward_util.tolerance(left_dist, bounds=(0.0, 0.0), margin=0.5)
+        right_proximity = humanoid_reward_util.tolerance(right_dist, bounds=(0.0, 0.0), margin=0.5)
 
-            results.append((left_proximity + right_proximity) / 2)
-        return torch.tensor(results)
+        reward_hand = (left_proximity + right_proximity) / 2
+        return reward_hand
 
 
 @configclass
