@@ -21,8 +21,7 @@ class StandingReward(HumanoidBaseReward):
         super().__init__(robot_name)
         self._stand_height = 0.6
 
-    def __call__(self, states: list[EnvState]) -> torch.floatTensor:
-        """Compute the standing reward."""
+    def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
         """Compute the standing reward."""
         results_still = []
         for state in states:
@@ -31,15 +30,16 @@ class StandingReward(HumanoidBaseReward):
             still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
             still_reward = (still_x + still_y) / 2
             results_still.append(still_reward)
+        stable_reward = StableReward(robot_name=self._robot_name)(states)
+        return torch.tensor(results_still) * stable_reward
 
-        stable_rewards = StableReward(robot_name=self._robot_name)(states)
-        return torch.tensor(results_still) * stable_rewards
+        # MOD
 
 
 class OrientationReward(HumanoidBaseReward):
     """Reward function for cube orientation alignment."""
 
-    def __init__(self, robot_name="h1_simple_hand"):
+    def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the orientation reward."""
         super().__init__(robot_name)
 
@@ -61,7 +61,7 @@ class OrientationReward(HumanoidBaseReward):
 class HandProximityReward(HumanoidBaseReward):
     """Reward function for hand-cube proximity."""
 
-    def __init__(self, robot_name="h1_simple_hand"):
+    def __init__(self, robot_name="h1_hand_hb"):
         """Initialize the hand proximity reward."""
         super().__init__(robot_name)
 

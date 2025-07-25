@@ -251,7 +251,7 @@ def last_dof_vel_tensor(envstate, robot_name: str):
     return envstate.robots[robot_name].extra["last_dof_vel"]
 
 
-def ref_dof_pos_tenosr(envstate, robot_name: str):
+def ref_dof_pos_tensor(envstate, robot_name: str):
     """Returns the dof pos."""
     return envstate.robots[robot_name].extra["ref_dof_pos"]
 
@@ -293,7 +293,7 @@ def foot_air_time_tensor(envstate, robot_name: str):
 
 def command_tensor(envstate, robot_name: str):
     """Returns the command."""
-    return envstate.robots[robot_name].extra["commnad"]
+    return envstate.robots[robot_name].extra["command"]
 
 
 def actuator_knee_pos_tensor(envstate, robot_name: str):
