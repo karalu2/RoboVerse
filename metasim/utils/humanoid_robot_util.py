@@ -97,13 +97,18 @@ def robot_position_tensor(envstate, robot_name: str):
 
 
 def object_position(envstate, object_name: str):
-    """Returns position of the robot."""
+    """Returns position of the object."""
     return envstate["objects"][object_name]["pos"]
 
 
 def object_position_tensor(envstate, object_name: str):
-    """Returns position of the robot."""
+    """Returns position of the object."""
     return envstate.objects[object_name].root_state[:, 0:3]
+
+
+def object_rotation_tensor(envstate, object_name: str):
+    """Returns rotation of the object."""
+    return envstate.objects[object_name].root_state[:, 3:7]
 
 
 def robot_velocity(envstate, robot_name: str):

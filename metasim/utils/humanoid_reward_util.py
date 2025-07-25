@@ -187,7 +187,7 @@ def tolerance_tensor(x, bounds=(0.0, 0.0), margin=0.0, sigmoid="gaussian", value
     """Returns 1 when `x` falls inside the bounds, between 0 and 1 otherwise.
 
     Args:
-      x: A scalar or numpy array.
+      x: A scalar or torch tensor.
       bounds: A tuple of floats specifying inclusive `(lower, upper)` bounds for
         the target interval. These can be infinite if the interval is unbounded
         at one or both ends, or they can be equal to one another if the target

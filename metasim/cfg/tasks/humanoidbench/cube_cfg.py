@@ -9,6 +9,10 @@ from metasim.cfg.objects import RigidObjCfg
 from metasim.constants import PhysicStateType
 from metasim.types import EnvState
 from metasim.utils import configclass, humanoid_reward_util, humanoid_robot_util
+from metasim.utils.humanoid_robot_util import (
+    robot_velocity_tensor,
+
+)
 
 from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg, StableReward
 
@@ -23,17 +27,12 @@ class StandingReward(HumanoidBaseReward):
 
     def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
         """Compute the standing reward."""
-        results_still = []
-        for state in states:
-            com_vel = humanoid_robot_util.center_of_mass_velocity(state, self._robot_name)
-            still_x = humanoid_reward_util.tolerance(com_vel[0], bounds=(0.0, 0.0), margin=2)
-            still_y = humanoid_reward_util.tolerance(com_vel[1], bounds=(0.0, 0.0), margin=2)
-            still_reward = (still_x + still_y) / 2
-            results_still.append(still_reward)
+        com_vel = robot_velocity_tensor(states, self.robot_name)
+        still_x = humanoid_reward_util.tolerance_tensor(com_vel[:, 0], bounds=(0.0, 0.0), margin=2)
+        still_y = humanoid_reward_util.tolerance_tensor(com_vel[:, 1], bounds=(0.0, 0.0), margin=2)
+        still_reward = (still_x + still_y) / 2
         stable_reward = StableReward(robot_name=self._robot_name)(states)
-        return torch.tensor(results_still) * stable_reward
-
-        # MOD
+        return still_reward * stable_reward
 
 
 class OrientationReward(HumanoidBaseReward):
@@ -55,7 +54,12 @@ class OrientationReward(HumanoidBaseReward):
             right_alignment = torch.norm(right_cube_rot - target_cube_rot)
 
             results.append(left_alignment + right_alignment)
-        return torch.tensor(results)
+        # return torch.tensor(results)
+
+        # MOD:
+
+        return
+
 
 
 class HandProximityReward(HumanoidBaseReward):
