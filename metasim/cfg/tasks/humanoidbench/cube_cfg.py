@@ -11,7 +11,9 @@ from metasim.types import EnvState
 from metasim.utils import configclass, humanoid_reward_util, humanoid_robot_util
 from metasim.utils.humanoid_robot_util import (
     robot_velocity_tensor,
-
+    body_pos_tensor,
+    object_rotation_tensor,
+    object_position_tensor,
 )
 
 from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg, StableReward
@@ -20,7 +22,7 @@ from .base_cfg import HumanoidBaseReward, HumanoidTaskCfg, StableReward
 class StandingReward(HumanoidBaseReward):
     """Reward function for maintaining standing posture."""
 
-    def __init__(self, robot_name="h1_hand_hb"):
+    def __init__(self, robot_name="h1_hand_hb", ):
         """Initialize the standing reward."""
         super().__init__(robot_name)
         self._stand_height = 0.6
@@ -30,8 +32,10 @@ class StandingReward(HumanoidBaseReward):
         com_vel = robot_velocity_tensor(states, self.robot_name)
         still_x = humanoid_reward_util.tolerance_tensor(com_vel[:, 0], bounds=(0.0, 0.0), margin=2)
         still_y = humanoid_reward_util.tolerance_tensor(com_vel[:, 1], bounds=(0.0, 0.0), margin=2)
+
         still_reward = (still_x + still_y) / 2
-        stable_reward = StableReward(robot_name=self._robot_name)(states)
+        stable_reward = StableReward(robot_name=self.robot_name)(states)
+
         return still_reward * stable_reward
 
 
@@ -44,21 +48,14 @@ class OrientationReward(HumanoidBaseReward):
 
     def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
         """Compute the orientation reward."""
-        results = []
-        for state in states:
-            left_cube_rot = state["metasim_body_cube_1/cube_1"]["rot"]
-            right_cube_rot = state["metasim_body_cube_2/cube_2"]["rot"]
-            target_cube_rot = state["metasim_body_cube_destination/cube_destination"]["rot"]
+        left_cube_rot = object_rotation_tensor(states, "cube_1")
+        right_cube_rot = object_rotation_tensor(states, "cube_2")
+        target_cube_rot = object_rotation_tensor(states, "cube_destination")
 
-            left_alignment = torch.norm(left_cube_rot - target_cube_rot)
-            right_alignment = torch.norm(right_cube_rot - target_cube_rot)
+        left_alignment = torch.norm(left_cube_rot - target_cube_rot)
+        right_alignment = torch.norm(right_cube_rot - target_cube_rot)
 
-            results.append(left_alignment + right_alignment)
-        # return torch.tensor(results)
-
-        # MOD:
-
-        return
+        return left_alignment + right_alignment
 
 
 
@@ -71,21 +68,18 @@ class HandProximityReward(HumanoidBaseReward):
 
     def __call__(self, states: list[EnvState]) -> torch.FloatTensor:
         """Compute the hand proximity reward."""
-        results = []
-        for state in states:
-            left_hand_pos = humanoid_robot_util.left_hand_position(state, self._robot_name)
-            right_hand_pos = humanoid_robot_util.right_hand_position(state, self._robot_name)
-            cube1_pos = state["metasim_body_cube_1/cube_1"]["pos"]
-            cube2_pos = state["metasim_body_cube_2/cube_2"]["pos"]
+        left_hand_pos = body_pos_tensor(states, self.robot_name, "left_elbow_link")
+        right_hand_pos = body_pos_tensor(states, self.robot_name, "right_elbow_link")
+        cube1_pos = object_position_tensor(states, "cube_1")
+        cube2_pos = object_position_tensor(states, "cube_2")
 
-            left_dist = torch.norm(left_hand_pos - cube1_pos)
-            right_dist = torch.norm(right_hand_pos - cube2_pos)
+        left_dist = torch.norm(left_hand_pos - cube1_pos)
+        right_dist = torch.norm(right_hand_pos - cube2_pos)
 
-            left_proximity = humanoid_reward_util.tolerance(left_dist, bounds=(0.0, 0.0), margin=0.5)
-            right_proximity = humanoid_reward_util.tolerance(right_dist, bounds=(0.0, 0.0), margin=0.5)
+        left_proximity = humanoid_reward_util.tolerance_tensor(left_dist, bounds=(0.0, 0.0), margin=0.5)
+        right_proximity = humanoid_reward_util.tolerance_tensor(right_dist, bounds=(0.0, 0.0), margin=0.5)
 
-            results.append((left_proximity + right_proximity) / 2)
-        return torch.tensor(results)
+        return (left_proximity + right_proximity) / 2
 
 
 @configclass

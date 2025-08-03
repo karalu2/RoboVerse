@@ -62,21 +62,17 @@ class H1HandHbCfg(BaseRobotCfg):
         "lh_A_THJ1": BaseActuatorCfg(),
         "lh_A_FFJ4": BaseActuatorCfg(),
         "lh_A_FFJ3": BaseActuatorCfg(),
-        "lh_A_FFJ1": BaseActuatorCfg(),
-        "lh_A_FFJ2": BaseActuatorCfg(),  # tendon (FFJ2 + FFJ1)
+        "lh_A_FFJ0": BaseActuatorCfg(),   # tendon (FFJ2 + FFJ1)
         "lh_A_MFJ4": BaseActuatorCfg(),
         "lh_A_MFJ3": BaseActuatorCfg(),
-        "lh_A_MFJ1": BaseActuatorCfg(),
-        "lh_A_MFJ2": BaseActuatorCfg(),  # tendon (MFJ2 + MFJ1)
+        "lh_A_MFJ0": BaseActuatorCfg(),   # tendon (MFJ2 + MFJ1)
         "lh_A_RFJ4": BaseActuatorCfg(),
         "lh_A_RFJ3": BaseActuatorCfg(),
-        "lh_A_RFJ1": BaseActuatorCfg(),
-        "lh_A_RFJ2": BaseActuatorCfg(),  # tendon (RFJ2 + RFJ1)
+        "lh_A_RFJ0": BaseActuatorCfg(),   # tendon (RFJ2 + RFJ1)
         "lh_A_LFJ5": BaseActuatorCfg(),
         "lh_A_LFJ4": BaseActuatorCfg(),
         "lh_A_LFJ3": BaseActuatorCfg(),
-        "lh_A_LFJ1": BaseActuatorCfg(),
-        "lh_A_LFJ2": BaseActuatorCfg(),  # tendon (LFJ2 + LFJ1)
+        "lh_A_LFJ0": BaseActuatorCfg(),   # tendon (LFJ2 + LFJ1)
         # --------------------- right hand (prefix rh_A_) ------------------
         "rh_A_WRJ2": BaseActuatorCfg(),
         "rh_A_WRJ1": BaseActuatorCfg(),
