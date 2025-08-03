@@ -523,24 +523,16 @@ class _PushChecker(BaseChecker):
 @configclass
 class _CubeChecker(BaseChecker):
     def check(self, handler: BaseSimHandler) -> torch.BoolTensor:
+        from metasim.utils.humanoid_reward_util import (
+            body_pos_tensor,
+            object_position_tensor,
+        )
+
         states = handler.get_states()
-        terminated = []
-
-        for state in states:
-            # Get the z-coordinate of the robot pelvis
-            pelvis_z = state[f"metasim_body_{handler.robot.name}/pelvis"]["com"][2]  # 骨盆 z 坐标
-
-            # Get the z-coordinate of the cube in the left and right hands
-            cube_left_z = state["metasim_body_cube_1/cube_1"]["pos"][2]  # z-coordinate of the cube in the left hand
-            cube_right_z = state["metasim_body_cube_2/cube_2"]["pos"][2]  # z-coordinate of the cube in the right hand
-
-            # When the pelvis z-coordinate or any cube z-coordinate is less than 0.5, terminate
-            if pelvis_z < 0.5 or cube_left_z < 0.5 or cube_right_z < 0.5:
-                terminated.append(True)
-            else:
-                terminated.append(False)
-
-        return torch.tensor(terminated)
+        pelvis_z = body_pos_tensor(states, handler.robot.name, "pelvis")[2]
+        cube_left_z = object_position_tensor(states, "cube_1")[2]
+        cube_right_z = object_position_tensor(states, "cube_2")[2]
+        return pelvis_z < 0.5 or cube_left_z < 0.5 or cube_right_z < 0.5
 
 
 ## FIXME: This checker should be removed!
